@@ -7,7 +7,6 @@ TODO:
 * nice error if plugin can't load
 * me menu
 * permanent integration into the messaging menu after quitting gajim
-* show/hide gajim on root menu entry
 * switch workspace on click on events
 * pictures in the menu
 * hide gajim if the plugin is disabled
@@ -63,6 +62,7 @@ class UbuntuIntegrationPlugin(GajimPlugin):
         
         self.server = indicate.indicate_server_ref_default()
         self.server.set_type("message.im")
+        self.server.connect("server-display", self.on_server_activate)
         dfile = ""
         for file in load_data_paths("applications/gajim.desktop"):
             dfile = file
@@ -92,6 +92,9 @@ class UbuntuIntegrationPlugin(GajimPlugin):
         
         del self.server
         del self.events
+
+    def on_server_activate(self, server, time):
+        gajim.interface.roster.window.show()
     
     def on_indicator_activate(self, indicator, _):
         """
